@@ -3,38 +3,32 @@ function refresh() {
 }
 
 function playGame(response) {
-  var counter1 = 0;
-  var counter2 = 0;
   $(document).keyup(function(e){
-    var player_one = "Q".charCodeAt(0);
-    var player_two = "P".charCodeAt(0);
-    var node1 = document.getElementById('player1_strip');
-    var node2 = document.getElementById('player2_strip');
-    var array1 = node1.getElementsByTagName('td');
-    var array2 = node2.getElementsByTagName('td');
+    var key_to_move_player_one = "Q".charCodeAt(0);
+    var key_to_move_player_two = "P".charCodeAt(0);
 
-    if (e.keyCode === player_one){
-      if(counter1 < array1.length-1){
-        array1[counter1].className = 'inactive';
-        array1[counter1 + 1].className = 'active';
-        counter1+=1;
-        if (counter1 === array1.length-1){
-          alert('Player 1 Wins!!!');
-          return_post = $.post("/winner", response["player1"]);
-          return_post.done(function(){ refresh() });
-        }
+    if (e.keyCode === key_to_move_player_one){
+      var player_one_active = $('#player1_strip').find('td.active');
+      player_one_active.next().addClass('active');
+      player_one_active.removeClass('active');
+      if (player_one_active.hasClass('end')){
+        alert("Player 1 Wins!");
+        var returned_data = $.post("/winner", response["player1"]);
+        returned_data.done(function(){
+          refresh();
+        });
       }
     }
-    if (e.keyCode === player_two){
-      if(counter2 < array2.length-1){
-        array2[counter2].className = 'inactive';
-        array2[counter2 + 1].className = 'active';
-        counter2+=1;
-        if (counter2 === array2.length-1){
-          alert('Player 2 Wins!!!');
-          var return_post = $.post("/winner", response["player2"]);
-          return_post.done(function(){ refresh() });
-        }
+    else if (e.keyCode === key_to_move_player_two){
+      var player_two_active = $('#player2_strip').find('td.active');
+      player_two_active.next().addClass('active');
+      player_two_active.removeClass('active');
+      if (player_two_active.hasClass('end')){
+        alert("Player 2 Wins!");
+        var returned_data = $.post("/winner", response["player2"]);
+        returned_data.done(function(){
+          refresh();
+        });
       }
     }
   });
@@ -54,6 +48,3 @@ $(document).ready(function() {
     });
   });
 });
-
-
-
